@@ -1,22 +1,21 @@
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-dotenv.config();
+let isConnected = false; // Global flag untuk mengecek status koneksi
 
-const DATABASE_URI = process.env.DATABASE_URI;
-
-if (!DATABASE_URI) {
-  throw new Error('Please define the DATABASE_URI environment variable');
-}
-
-async function connectDB() {
-  try {
-    await mongoose.connect(DATABASE_URI as string,{connectTimeoutMS: 60000});
-    console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    process.exit(1);
+const connectDB = async () => {
+  if (isConnected) {
+    console.log("Menggunakan koneksi database yang sudah ada");
+    return;
   }
-}
+
+  try {
+    const connection = await mongoose.connect(process.env.DATABASE_URI || "");
+    isConnected = !!connection.connections[0].readyState;
+    console.log("Terkoneksi ke database");
+  } catch (error) {
+    console.error("Gagal terkoneksi ke database:", error);
+    throw error;
+  }
+};
 
 export default connectDB;
