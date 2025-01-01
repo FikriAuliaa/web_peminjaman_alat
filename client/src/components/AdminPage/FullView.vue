@@ -86,7 +86,6 @@ export default {
       Items,
       loadingStates,
       dropdownStates,
-      handleImageLoaded,
       toggleDropdown,
       deleteItem,
       navigateToEditPage,
