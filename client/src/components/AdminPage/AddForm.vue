@@ -71,55 +71,34 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import axios from "axios";
 
 export default {
   name: "AddForm",
-  props: {
-    onClose: {
-      type: Function,
-      required: false,
-    },
-  },
-  data() {
-    return {
-      form: {
-        pic: "",
-        name: "",
-        amount: null,
-        condition: "",
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      console.log(this.form);
-
-      axios
-        .post("http://localhost:4000/admin", this.form, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          console.log("Form submitted successfully:", response.data);
-          alert("Form submitted successfully!");
-
-          this.form = {
-            pic: "",
-            name: "",
-            amount: null,
-            condition: "",
-          };
-
-          if (this.onClose) {
-            this.onClose();
+  setup() {
+    const formData = ref({ name: "", amount: "", condition: "" });
+    const addItem = async () => {
+      try {
+        await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/admin`,
+          formData.value,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
-        })
-        .catch((error) => {
-          console.error("Error submitting form:", error);
-        });
-    },
+        );
+        alert("Item successfully added!");
+      } catch (error) {
+        console.error("Error adding item:", error);
+        alert("Failed to add item. Please try again.");
+      }
+    };
+    return {
+      formData,
+      addItem,
+    };
   },
 };
 </script>

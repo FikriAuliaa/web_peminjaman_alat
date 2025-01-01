@@ -1,89 +1,31 @@
 <script>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import axios from "axios";
-import router from "@/router";
 
 export default {
   name: "EditItem",
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const item = ref(null);
-    const form = ref({
-      pic: "",
-      name: "",
-      amount: "",
-      condition: "",
-    });
-
-    const fetchItem = async () => {
+  setup() {
+    const itemData = ref({ name: "", amount: "", condition: "" });
+    const editItem = async (id) => {
       try {
-        const result = await axios.get(
-          `http://localhost:4000/admin/${props.id}`,
+        await axios.put(
+          `${import.meta.env.VITE_BACKEND_URL}/admin/${id}`,
+          itemData.value,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
-        item.value = result.data;
-        form.value = { ...item.value };
-      } catch (error) {
-        console.error("Error fetching item:", error);
-      }
-    };
-
-    const submitForm = async () => {
-      const updatedItem = {};
-
-      if (form.value.pic !== item.value.pic) {
-        updatedItem.pic = form.value.pic;
-      }
-      if (form.value.name !== item.value.name) {
-        updatedItem.name = form.value.name;
-      }
-      if (form.value.amount !== item.value.amount) {
-        updatedItem.amount = form.value.amount;
-      }
-      if (form.value.condition !== item.value.condition) {
-        updatedItem.condition = form.value.condition;
-      }
-
-      if (Object.keys(updatedItem).length === 0) {
-        alert("No changes made.");
-        return;
-      }
-
-      try {
-        await axios.patch(
-          `http://localhost:4000/admin/${props.id}`,
-          updatedItem,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        alert("Item updated successfully!");
-        router.push("/admin");
+        alert("Item successfully updated!");
       } catch (error) {
         console.error("Error updating item:", error);
         alert("Failed to update item. Please try again.");
       }
     };
-
-    onMounted(() => {
-      fetchItem();
-    });
-
     return {
-      form,
-      submitForm,
+      itemData,
+      editItem,
     };
   },
 };

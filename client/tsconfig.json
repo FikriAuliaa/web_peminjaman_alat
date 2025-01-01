@@ -1,11 +1,23 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    }
+  "compilerOptions": {
+    "target": "esnext", // Target output, biasanya ESNext untuk proyek modern
+    "module": "esnext", // Gunakan modul ESNext
+    "moduleResolution": "node",
+    "strict": true, // Aktifkan pemeriksaan ketat TypeScript
+    "jsx": "preserve", // Untuk mendukung JSX jika diperlukan (Vue mendukung TSX/JSX)
+    "esModuleInterop": true, // Mempermudah impor modul CommonJS
+    "skipLibCheck": true, // Abaikan pemeriksaan tipe pada file library
+    "forceConsistentCasingInFileNames": true, // Konsistensi penamaan file
+    "resolveJsonModule": true, // Mendukung impor file JSON
+    "lib": ["esnext", "dom"], // Tambahkan dukungan untuk API DOM dan fitur modern
+    "types": ["vite/client"] // Tambahkan tipe untuk Vite
+  },
+  "include": [
+    "src", // Direktori sumber utama
+    "env.d.ts" // File tipe untuk variabel lingkungan
+  ],
+  "exclude": [
+    "node_modules", // Abaikan direktori `node_modules`
+    "dist" // Abaikan direktori hasil build
   ]
 }
