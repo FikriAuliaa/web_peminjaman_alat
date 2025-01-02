@@ -12,7 +12,7 @@ const app = express();
 // Middleware CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // URL frontend
+    origin: "https://frontend-web-peminjaman-alat.vercel.app", // URL frontend Anda
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Mengizinkan penggunaan cookie/credentials
   })
