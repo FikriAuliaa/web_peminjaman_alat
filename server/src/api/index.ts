@@ -9,9 +9,17 @@ import { authenticateToken } from "../middleware/authMiddleware";
 
 const app = express();
 
-// Middleware
+// Middleware CORS
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // URL frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Mengizinkan penggunaan cookie/credentials
+  })
+);
+
+// Middleware untuk parsing JSON
 app.use(express.json());
-app.use(cors());
 
 // Koneksi database
 connectDB();
@@ -21,6 +29,7 @@ app.get("/", (req, res) => {
   res.send("Server berjalan di Vercel!");
 });
 
+// Route API
 app.use("/admin", authenticateToken, adminRouter);
 app.use("/operator", authenticateToken, operatorRouter);
 app.use("/auth", authRouter);
